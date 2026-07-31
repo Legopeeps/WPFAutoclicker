@@ -1,14 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WPFAutoclicker
 {
@@ -18,24 +10,53 @@ namespace WPFAutoclicker
     public partial class MainWindow : Window
     {
         bool isClicking = false;
+        int delay = 1000;
         public MainWindow()
         {
             InitializeComponent();
+            btnStartAuto.Click += ButtonStartAuto_Click;
+            btnStopAuto.Click += ButtonStopAuto_Click;
+            txtDelay.TextChanged += txtDelay_TextChanged;
         }
-
-        private void ButtonStartAuto_Click(object sender, RoutedEventArgs e)
+        [DllImport("user32.dll")] static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
+        private async void ButtonStartAuto_Click(object sender, RoutedEventArgs e)
         {
-            if (!isClicking)
+            isClicking = true; //set clicking to start
+            Debug.WriteLine("Auto-clicking.");
+
+            while (isClicking)
             {
-                isClicking = true;
-                Debug.WriteLine("Auto-clicking started.");
-                //set clicking to start
+                mouse_event(0x0002, 0, 0, 0, UIntPtr.Zero); // Left mouse button down
+                mouse_event(0x0004, 0, 0, 0, UIntPtr.Zero); // Left mouse button up
+                
+                Debug.WriteLine("it would be clicking now");
+                
+                await Task.Delay(delay); // Delay between clicks
+
+                //if (Keyboard.IsKeyDown(Key.F6))
+                //{
+                //    Debug.WriteLine("F6 pressed. Stopping auto-clicking.");
+                //    
+                //}
+            }
+           
+        }
+        private void ButtonStopAuto_Click(object sender, RoutedEventArgs e)
+        {
+            isClicking = false; //disable clicking
+            mouse_event(0x0004, 0, 0, 0, UIntPtr.Zero);
+            Debug.WriteLine("Auto-clicking stopped.");
+        }
+        private void txtDelay_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (int.TryParse(txtDelay.Text, out delay))
+            {
+                // Update the delay value based on user input
+                Debug.WriteLine($"Delay updated to: {delay} ms");
             }
             else
             {
-                isClicking = false;
-                Debug.WriteLine("Auto-clicking stopped.");
-                //disable clicking
+                Debug.WriteLine("Invalid delay input. Please enter a valid integer.");
             }
         }
     }
