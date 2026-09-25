@@ -7,6 +7,12 @@ namespace WPFAutoclicker
 {
     public partial class MainWindow : Window
     {
+        [DllImport("user32.dll")]
+        static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+        //IntPtr selectedWindow = GetForegroundWindow();
+
         bool isClicking = false;
         int delay = 1000;
         bool isDelayVaild = true;
@@ -19,7 +25,6 @@ namespace WPFAutoclicker
 
             txtEquivalentTime.Text = $"Clicks per second = {delay / 1000.0}";
         }
-        [DllImport("user32.dll")] static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
         private async void ButtonStartAuto_Click(object sender, RoutedEventArgs e)
         {
             if (isDelayVaild)
@@ -85,6 +90,11 @@ namespace WPFAutoclicker
                 isDelayVaild = false;
                 MessageBox.Show("The delay must be less than 2,147,483,647");
             }
+        }
+
+        private void btnSelectWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
         }
     }
 }
