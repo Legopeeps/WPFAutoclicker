@@ -1,29 +1,25 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
-
 namespace WPFAutoclicker
 {
     public partial class MainWindow : Window
     {
+        #region DllImports
         [DllImport("user32.dll")]
         static extern void mouse_event(uint dwFlags, int dx, int dy, uint dwData, UIntPtr dwExtraInfo);
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
-        //IntPtr selectedWindow = GetForegroundWindow();
-
+        #endregion
         bool isClicking = false;
         int delay = 1000;
         bool isDelayVaild = true;
+
         public MainWindow()
         {
             InitializeComponent();
-            btnStartAuto.Click += ButtonStartAuto_Click;
-            btnStopAuto.Click += ButtonStopAuto_Click;
             txtDelay.TextChanged += txtDelay_TextChanged;
-
-            txtEquivalentTime.Text = $"Clicks per second = {delay / 1000.0}";
+            txtEquivalentTime.Text = $"Clicks per second = {1000.0 / delay:F2}";
         }
         private async void ButtonStartAuto_Click(object sender, RoutedEventArgs e)
         {
@@ -94,7 +90,8 @@ namespace WPFAutoclicker
 
         private void btnSelectWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-
+            IntPtr selectedWindow = GetForegroundWindow();
+            Debug.WriteLine($"Window:{selectedWindow} is selected");
         }
     }
 }
