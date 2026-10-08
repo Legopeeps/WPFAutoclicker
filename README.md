@@ -54,17 +54,7 @@ will perform one click every second.
 ## Usage
 
 1. Launch the application.
-2. Enter the desired click delay in milliseconds.
+2. Enter the desired click delay in milliseconds. The equivalence in clicks-per-second will be displayed
 3. Press **Start Autoclicker**.
 4. The application will begin generating left mouse clicks.
 5. Press **Stop Autoclicker** to stop.
-
-### Delay Examples
-
-| Delay | Click Speed |
-|------|-------------|
-| 1000 ms | 1 click per second |
-| 500 ms | 2 clicks per second |
-| 100 ms | 10 clicks per second |
-
----
